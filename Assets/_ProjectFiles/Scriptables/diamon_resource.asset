@@ -10,20 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f92571d4c2ab4b5c8b3b1f8366a0167a, type: 3}
-  m_Name: cultist_resource
+  m_Name: diamon_resource
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 243092317917654040, guid: 8fd3be41cb4060f4ebcde203667e1566, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
     - Name: Sprite
-      Entry: 6
-      Data: 
-    - Name: ID
+      Entry: 10
+      Data: 0
+    - Name: Name
       Entry: 1
-      Data: Cultist
+      Data: Diamond

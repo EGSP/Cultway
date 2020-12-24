@@ -360,7 +360,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4177244270432683513
 RectTransform:
   m_ObjectHideFlags: 0
@@ -464,6 +464,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdba617d84851274da66a0c9669c135d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultPoistion: {x: 0, y: 0}
+  selectedPosition: {x: 60, y: 150}
+  defaultScale: {x: 0.7, y: 0.7}
+  selectedScale: {x: 0.5, y: 0.5}
+  animDuration: 0.4
 --- !u!1 &4177244271311087010
 GameObject:
   m_ObjectHideFlags: 0

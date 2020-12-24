@@ -3,8 +3,13 @@ using UnityEngine;
 
 namespace Game.Resources
 {
+    // TODO: Operation group for card actions.
     public interface IResourceOperation
     {
+        /// <summary>
+        /// Получение символов описывающих действие. "(-1) (+2)"
+        /// </summary>
+        string GetDescriptionSymbols();
         /// <summary>
         /// Предусловие по которому можно понять возможность совершения операции.
         /// </summary>
@@ -18,6 +23,11 @@ namespace Game.Resources
         [OdinSerialize]
         public int AddCount { get; set; }
 
+        public string GetDescriptionSymbols()
+        {
+            return $"(+{AddCount})";
+        }
+
         public bool Precondition(Resource source)
         {
             return true;
@@ -29,6 +39,7 @@ namespace Game.Resources
                 Debug.LogWarning("Resource is null! Operation failed");
 
             source.Count += AddCount;
+            Debug.Log("Added resources");
         }
     }
     
@@ -36,6 +47,11 @@ namespace Game.Resources
     {
         [OdinSerialize]
         public int RemoveCount { get; set; }
+
+        public string GetDescriptionSymbols()
+        {
+            return $"(-{RemoveCount})";
+        }
 
         public bool Precondition(Resource source)
         {

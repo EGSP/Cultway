@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using Egsp.Core;
+using Game.Ui;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace Game.Cards
 {
-    public class CardFactory : SerializedMonoBehaviour
+    public class CardFactory : SerializedSingleton<CardFactory>
     {
-        public List<CardInfo> cards;
-
-        public ICardVisual CardVisualPrefab;
+        [SerializeField] public Transform cardVisualParent;
+        [OdinSerialize] public ICardVisual CardVisualPrefab;
 
         private void Awake()
         {
@@ -17,18 +20,24 @@ namespace Game.Cards
         }
 
         [Button("CreateCardVisual")]
-        public void CreateCardVisual(Transform parent, CardInfo cardInfo)
+        public ICardVisual CreateCardVisual(Transform parent, CardInfo cardInfo)
         {
             if (!CheckVisual())
             {
-                return;
+                throw new NullReferenceException();
             }
 
+            // Instancing
             var inst = Instantiate((MonoBehaviour) CardVisualPrefab);
             inst.transform.SetParent(parent, false);
             inst.transform.localPosition = Vector3.zero;
 
-            ((ICardVisual) inst).Accept(cardInfo);
+            // Logic
+            var visual = (ICardVisual) inst;
+            visual.Enable();
+            visual.Accept(cardInfo);
+
+            return visual;
         }
 
         private bool CheckVisual()

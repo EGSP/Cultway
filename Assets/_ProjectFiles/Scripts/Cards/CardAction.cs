@@ -1,4 +1,6 @@
-﻿using Game.Resources;
+﻿using System;
+using Game.Resources;
+using UnityEngine;
 
 namespace Game.Cards
 {
@@ -14,5 +16,22 @@ namespace Game.Cards
         /// Операция совершаемая этим действием.
         /// </summary>
         public IResourceOperation Operation;
+
+        [TextArea]
+        public string description;
+
+        public string GetDecription()
+        {
+            return description + Operation?.GetDescriptionSymbols();
+        }
+
+        public void Invoke(IResourcesStorage storage)
+        {
+            var sourceResource = storage.GetResourceByInfo(resourceInfo);
+            if(sourceResource == null)
+                throw new NullReferenceException();
+            
+            Operation.Invoke(sourceResource);
+        }
     }
 }

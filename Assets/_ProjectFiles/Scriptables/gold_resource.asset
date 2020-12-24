@@ -15,15 +15,16 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: -8496888365601495813, guid: 8fd3be41cb4060f4ebcde203667e1566, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
     - Name: Sprite
-      Entry: 6
-      Data: 
-    - Name: ID
+      Entry: 10
+      Data: 0
+    - Name: Name
       Entry: 1
       Data: Gold

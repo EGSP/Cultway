@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using Unity.Collections;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class AspectFit : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        Camera.main.orthographicSize = ScreenFitter.WidthOrtoPortrait(widthFit, Camera.main);
+        ChangeScreen();
     }
 
     private void OnDrawGizmos()
@@ -20,6 +21,12 @@ public class AspectFit : MonoBehaviour
         var widthHalf = widthFit / 2;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.right*widthHalf);
         Gizmos.DrawLine(transform.position, transform.position - Vector3.right*widthHalf);
+    }
+
+    [Button("Change screen")]
+    private void ChangeScreen()
+    {
+        Camera.main.orthographicSize = ScreenFitter.WidthOrtoPortrait(widthFit, Camera.main);
     }
 }
 
