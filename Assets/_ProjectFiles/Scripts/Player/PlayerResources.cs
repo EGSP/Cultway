@@ -12,7 +12,7 @@ namespace Game.Player
 
         public PlayerResources(IEnumerable<ResourceInfo> resourceInfos):this()
         {
-            ExtractResources(resourceInfos);
+            InitResourcesByInfo(resourceInfos);
         }
         
         /// <summary>
@@ -20,14 +20,14 @@ namespace Game.Player
         /// </summary>
         public Dictionary<string, Resource> Resources { get; private set; }
 
-        public void ExtractResources(IEnumerable<ResourceInfo> resourceInfos)
+        public Resource GetResource(ResourceInfo resourceInfo)
         {
-            Resources = this.GetResourcesDictionary(resourceInfos);
+            return this.GetResourceFromDictionary(resourceInfo);
         }
 
-        public Resource GetResourceByInfo(ResourceInfo resourceInfo)
+        public void InitResourcesByInfo(IEnumerable<ResourceInfo> resourceInfos)
         {
-            return this.GetResource(resourceInfo);
+            Resources = this.GetResourcesDictionary(resourceInfos);
         }
     }
 }

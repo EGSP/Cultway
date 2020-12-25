@@ -24,15 +24,20 @@ namespace Game.Resources
             private set => _cachedResources = value;
         } 
         private Dictionary<string, Resource> _cachedResources;
-        
-        public void ExtractResources(IEnumerable<ResourceInfo> resourceInfos)
+
+        public Resource GetResource(ResourceInfo resourceInfo)
+        {
+            return this.GetResourceFromDictionary(resourceInfo);
+        }
+
+        public void InitResourcesByInfo(IEnumerable<ResourceInfo> resourceInfos)
         {
             Resources = this.GetResourcesDictionary(resourceInfos);
         }
 
-        public Resource GetResourceByInfo(ResourceInfo resourceInfo)
+        public Resource CreateResourceByInfo(ResourceInfo resourceInfo)
         {
-            return this.GetResource(resourceInfo);
+            return this.CreateResource(resourceInfo);
         }
 
         [Button("Convert info to resources")]

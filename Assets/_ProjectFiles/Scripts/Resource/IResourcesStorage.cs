@@ -7,13 +7,31 @@ namespace Game.Resources
     {
         Dictionary<string, Resource> Resources { get; }
 
-        void ExtractResources(IEnumerable<ResourceInfo> resourceInfos);
-
-        Resource GetResourceByInfo(ResourceInfo resourceInfo);
+        /// <summary>
+        /// Получение ресурса по ResourceInfo. Null при отсутствии.
+        /// </summary>
+        Resource GetResource(ResourceInfo resourceInfo);
+        
+        /// <summary>
+        /// Создает экземпляры ресурсов по коллекции ResourceInfo
+        /// </summary>
+        void InitResourcesByInfo(IEnumerable<ResourceInfo> resourceInfos);
     }
 
     public static class ResourceStorageExtensions
     {
+        /// <summary>
+        /// Получение ресурса по ResourceInfo. Null при отсутствии.
+        /// </summary>
+        public static Resource GetResourceFromDictionary(this IResourcesStorage storage, ResourceInfo resourceInfo)
+        {
+            if (storage.Resources.ContainsKey(resourceInfo.Name))
+            {
+                return storage.Resources[resourceInfo.Name];
+            }
+            return null;
+        }
+        
         /// <summary>
         /// Создания словаря ресурсов на основе объекта информации.
         /// </summary>
@@ -30,7 +48,7 @@ namespace Game.Resources
             return dict;
         }
 
-        public static Resource GetResource(this IResourcesStorage storage, ResourceInfo resourceInfo)
+        public static Resource CreateResource(this IResourcesStorage storage, ResourceInfo resourceInfo)
         {
             if (storage.Resources.ContainsKey(resourceInfo.Name))
             {

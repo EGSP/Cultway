@@ -21,7 +21,7 @@ namespace Game.Cards
         /// <summary>
         /// Действия которые может совершить карта.
         /// </summary>
-        [OdinSerialize][TableList]
+        [OdinSerialize][TableList(AlwaysExpanded = true)]
         public List<CardAction> CardActions { get; private set; }
     }
 }

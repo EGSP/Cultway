@@ -23,7 +23,7 @@ namespace Game
 
         protected void Start()
         {
-            _storage.ExtractResources(cardInfo.CardActions.Select(x=>x.resourceInfo));
+            _storage.InitResourcesByInfo(cardInfo.CardActions.Select(x=>x.resourceInfo));
             
             cardRootController.AcceptCard(CardFactory.Instance, cardInfo, _storage);
             resourceStorageController.Accept(_storage);

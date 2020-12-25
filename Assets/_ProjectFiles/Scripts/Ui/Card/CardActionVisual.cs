@@ -43,8 +43,7 @@ namespace Game.Ui
             // Если имеется подобный ресурс в хранилище.
             if (storage.Resources.ContainsKey(resourceInfo.Name))
             {
-                var storageR = storage.Resources[resourceInfo.Name];
-                if (cardAction.Operation.Precondition(storageR))
+                if (cardAction.Precodnition(storage))
                 {
                     button.onClick.AddListener(()=> OnClicked(cardAction));
                 }
