@@ -1,10 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Game.World
 {
     public interface ITown
     {
-        Vector3 Position { get; set; }
+        event Action<ITown> OnVisited;
         
+        /// <summary>
+        /// Был ли город посещен.
+        /// </summary>
+        bool Visited { get; set; }
+        
+        /// <summary>
+        /// Текущая позиция города в пространстве.
+        /// </summary>
+        Vector3 Position { get; set; }
     }
 }

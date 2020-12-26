@@ -15,32 +15,28 @@ namespace Game.World
     {
         [SerializeField] private List<IMapListener> _mapListeners;
 
+        public Vector3 MainOffset { get; set; }
+        
         /// <summary>
-        /// Смещение происходит относительно направления движения кого-либо объекта.
-        /// Скорость умножается на deltaTime.
+        /// Мир сдвигается относительно конечной точки в обратном направлении.
         /// </summary>
-        [Button("Move map")]
-        public void MoveRelated(Vector3 relatedDirection, float speed)
-        {
-            Move(-relatedDirection, speed);
-        }
-
-        /// <summary>
-        /// Мир сдвигается по направлению.
-        /// Скорость умножается на deltaTime.
-        /// </summary>
-        public void Move(Vector3 direction, float speed)
+        public CallBack Move(Vector3 endPoint, float time)
         {
             var tempGameobject = new GameObject("TempGameobject");
             tempGameobject.transform.SetParent(transform);
-            tempGameobject.transform.position = Vector3.zero;
-
+            tempGameobject.transform.localPosition = Vector3.zero-MainOffset;
+            
+            var callback = new CallBack();
+            callback.With(() => DestroyImmediate(tempGameobject));
+            
             // Передвигаем виртуальный объект и обновляем позиции слушателей.
-            var tween = tempGameobject.transform.DOLocalMove(direction, 1/speed)
+            var tween = tempGameobject.transform.DOLocalMove(-endPoint, time)
                 .OnUpdate(()=>UpdateMapListeneres(tempGameobject.transform.localPosition))
-                .OnComplete(()=> DestroyImmediate(tempGameobject));
+                .OnComplete(callback.On);
 
             _lastPosition = tempGameobject.transform.localPosition;
+
+            return callback;
         }
 
         private Vector3 _lastPosition;
@@ -49,6 +45,7 @@ namespace Game.World
             if (_mapListeners == null)
                 return;
 
+            // Сдвигаем всех подписчиков по координатам.
             foreach (var listener in _mapListeners)
             {
                 listener.MapUpdate(newPosition - _lastPosition);
