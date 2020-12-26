@@ -20,6 +20,7 @@ namespace Game.World
         [SerializeField] private ITown townPrefab;
         
         private LinkedList<ITown> _townList = new LinkedList<ITown>();
+        private Queue<ITown> _visitedTowns = new Queue<ITown>();
         
 
         /// <summary>
@@ -54,7 +55,6 @@ namespace Game.World
         [Button("Spawn towns")]
         public void SpawnTowns(int count)
         {
-            _townList.Clear();
             for (var i = 0;  i< count; i++)
             {
                 SpawnTown();
@@ -92,7 +92,8 @@ namespace Game.World
             {
                 newTown.Position = mainPosition;
             }
-            
+
+            newTown.OnVisited += OnTownVisited;
             _townList.AddLast(newTown);
 
             return newTown;
@@ -152,6 +153,25 @@ namespace Game.World
             }
 
             return false;
+        }
+
+        private void OnTownVisited(ITown visitedTown)
+        {
+            _visitedTowns.Enqueue(visitedTown);
+
+            // Удаление лишних городов.
+            if (_visitedTowns.Count > visitedTownsCount)
+            {
+                var townToDestroy = _visitedTowns.Dequeue();
+                _townList.Remove(townToDestroy);
+
+                var obj = townToDestroy as MonoBehaviour;
+                if (obj != null)
+                {
+                    Debug.Log("Town destoyed.");
+                    Destroy(obj.gameObject);
+                }
+            }
         }
         
         public void MapUpdate(Vector3 addOffset)

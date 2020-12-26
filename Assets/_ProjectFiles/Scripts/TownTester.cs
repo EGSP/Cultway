@@ -22,13 +22,6 @@ namespace Game
             map.MainOffset = townManager.mainPosition;
         }
 
-        
-        private void OnTownArrived(ITown town)
-        {
-            town.OnVisited -= OnTownArrived;
-            Debug.Log("Прибытие в город.");    
-        }
-
         /// <summary>
         /// Перемещение к следующему городу.
         /// Данный метод только влияет на карту, но не лагику городов.
@@ -42,8 +35,6 @@ namespace Game
             }
 
             var town = townManager.ActiveTown;
-
-            town.OnVisited += OnTownArrived;
             
             // Передвигаем карту и в конце посещаем город.
             map.Move(town.Position, travelTime)
@@ -61,6 +52,9 @@ namespace Game
         private void VisitTargetTown(ITown target)
         {
             target.Visited = true;
+            Debug.Log("Прибытие в город.");
+            
+            townManager.SpawnTowns(1);
         }
 
         private void OnDrawGizmos()
