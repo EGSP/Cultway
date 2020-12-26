@@ -7,9 +7,14 @@ namespace Game.Resources
     public interface IResourceOperation
     {
         /// <summary>
-        /// Получение символов описывающих действие. "(-1) (+2)"
+        /// Получение символов описывающих действие.
         /// </summary>
         string GetDescriptionSymbols();
+        /// <summary>
+        /// Получение цвета обозначения операции.
+        /// </summary>
+        Color GetColor();
+        
         /// <summary>
         /// Предусловие по которому можно понять возможность совершения операции.
         /// </summary>
@@ -23,9 +28,30 @@ namespace Game.Resources
         [OdinSerialize]
         public int AddCount { get; set; }
 
+        public Color Color
+        {
+            get 
+            {
+                if (color == null)
+                {
+                    color = Color.green;        
+                }
+
+                return color;
+            }
+            private set => color = value;
+        }
+        [SerializeField]
+        private Color color;
+
         public string GetDescriptionSymbols()
         {
-            return $"(+{AddCount})";
+            return $"+{AddCount}";
+        }
+
+        public Color GetColor()
+        {
+            return Color;
         }
 
         public bool Precondition(Resource source)
@@ -47,10 +73,31 @@ namespace Game.Resources
     {
         [OdinSerialize]
         public int RemoveCount { get; set; }
+        
+        public Color Color
+        {
+            get 
+            {
+                if (color == null)
+                {
+                    color = Color.red;        
+                }
+
+                return color;
+            }
+            private set => color = value;
+        }
+        [SerializeField]
+        private Color color;
 
         public string GetDescriptionSymbols()
         {
-            return $"(-{RemoveCount})";
+            return $"-{RemoveCount}";
+        }
+
+        public Color GetColor()
+        {
+            return Color;
         }
 
         public bool Precondition(Resource source)

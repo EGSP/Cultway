@@ -27,6 +27,27 @@ namespace Game.Cards
                     resourceOperation.InvokeOperation(storage);
                 }
             }
+
+            /// <summary>
+            /// Получение всех видов ресурсов из операций.
+            /// </summary>
+            public List<ResourceInfo> ResourceInfos()
+            {
+                if(ResourceOperationBindings == null)
+                    throw new NullReferenceException();
+                
+                var list = new List<ResourceInfo>();
+
+                foreach (var resourceOperationBinding in ResourceOperationBindings)
+                {
+                    if (!list.Contains(resourceOperationBinding.resourceInfo))
+                    {
+                        list.Add(resourceOperationBinding.resourceInfo);
+                    }
+                }
+
+                return list;
+            }
         }
 
         /// <summary>
@@ -59,28 +80,18 @@ namespace Game.Cards
         /// Группа операций с разными ресурсами для текущего действия.
         /// </summary>
         public CardOperationGroup OperationGroup;
-        
-        /// <summary>
-        /// Ресурс с которым данная операция работает.
-        /// </summary>
-        public ResourceInfo resourceInfo;
-        
-        /// <summary>
-        /// Операция совершаемая этим действием.
-        /// </summary>
-        public IResourceOperation Operation;
 
         [TextArea]
         public string description;
 
         public string GetDecription()
         {
-            return description + Operation?.GetDescriptionSymbols();
+            return description;
         }
 
         public bool Precodnition(IResourcesStorage storage)
         {
-            if (OperationGroup == null)
+            if (OperationGroup == null || OperationGroup.ResourceOperationBindings == null)
             {
                 Debug.LogWarning("В карте не определены операции!");
                 return false;   
@@ -95,7 +106,7 @@ namespace Game.Cards
                 // Если не существует данного ресурса.
                 if (resource == null)
                 {
-                    Debug.LogWarning($"В хранилище нет ресурса {resourceInfo.Name}");
+                    Debug.LogWarning($"В хранилище нет ресурса {operationBinding.resourceInfo.Name}");
                     return false;
                 }
 
@@ -113,6 +124,23 @@ namespace Game.Cards
         public void Invoke(IResourcesStorage storage)
         {
             OperationGroup.InvokeOperationsAll(storage);
+        }
+
+        public static List<ResourceInfo> UniqueResourceInfos(IEnumerable<CardAction> cardActions)
+        {
+            var list = new List<ResourceInfo>();
+            // Проходимся по всем действиям и добавляем уникальные ресурсы.
+            foreach (var cardAction in cardActions)
+            {
+                var cardList = cardAction.OperationGroup.ResourceInfos();
+                for (var i = 0; i < cardList.Count; i++)
+                {
+                    if(!list.Contains(cardList[i]))
+                        list.Add(cardList[i]);
+                }
+            }
+
+            return list;
         }
     }
 }

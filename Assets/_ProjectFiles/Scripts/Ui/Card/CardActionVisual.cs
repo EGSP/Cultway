@@ -19,7 +19,9 @@ namespace Game.Ui
     public class CardActionVisual : SerializedVisual<ICardActionVisual>, ICardActionVisual
     {
         [SerializeField] private TMP_Text description;
-        [SerializeField] private Image resourceIcon;
+
+        [SerializeField] private IResourceOperationEffectVisual resourceOperationEffectVisualPrefab;
+        [SerializeField] private TransformContainer resourcesIconsContainer;
         
         private CardAction _action;
         private IResourcesStorage _storage;
@@ -34,29 +36,24 @@ namespace Game.Ui
 
             // DESCRIPTION
             description.text = _action.GetDecription();
-            // ICON
-            resourceIcon.sprite = _action.resourceInfo.Sprite;
 
             // CLICKABLE
             var button = GetComponent<Button>();
-            var resourceInfo = cardAction.resourceInfo;
-            // Если имеется подобный ресурс в хранилище.
-            if (storage.Resources.ContainsKey(resourceInfo.Name))
+            if (!_action.Precodnition(storage))
             {
-                if (cardAction.Precodnition(storage))
-                {
-                    button.onClick.AddListener(()=> OnClicked(cardAction));
-                }
-                // Если операция невозможна.
-                else
-                {
-                    button.interactable = false;
-                }
+                button.interactable = false;
             }
             else
             {
-                Debug.LogWarning($"Storage does not contain {resourceInfo.Name}");
-                button.interactable = false;
+                button.onClick.AddListener(()=>OnClicked(cardAction));
+            }
+
+            // ICONS
+            foreach (var resourceOperationBinding in _action.OperationGroup.ResourceOperationBindings)
+            {
+                var visual = resourcesIconsContainer
+                    .Put<IResourceOperationEffectVisual>(resourceOperationEffectVisualPrefab);
+                visual.Accept(resourceOperationBinding.resourceInfo, resourceOperationBinding.Operation);
             }
         }
     }
