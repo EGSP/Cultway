@@ -34,16 +34,11 @@ namespace Game
                 return;
             }
 
-            var town = townManager.ActiveTown;
+            var town = townManager.CurrentTown;
             
             // Передвигаем карту и в конце посещаем город.
             map.Move(town.Position, travelTime)
-                .With(()=>OnTravelComplete(town));
-        }
-
-        private void OnTravelComplete(ITown town)
-        {
-            VisitTargetTown(town);
+                .With(()=>VisitTargetTown(town));
         }
 
         /// <summary>
@@ -53,8 +48,6 @@ namespace Game
         {
             target.Visited = true;
             Debug.Log("Прибытие в город.");
-            
-            townManager.SpawnTowns(1);
         }
 
         private void OnDrawGizmos()
@@ -63,9 +56,9 @@ namespace Game
 
             if (townManager != null)
             {
-                if (townManager.ActiveTown != null)
+                if (townManager.CurrentTown != null)
                 {
-                    Gizmos.DrawSphere(townManager.ActiveTown.Position,0.3f);
+                    Gizmos.DrawSphere(townManager.CurrentTown.Position,0.3f);
                 }
             }
         }
