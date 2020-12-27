@@ -32,16 +32,28 @@ namespace Game.Ui
         private ICardVisual _currentCardVisual;
         private IResourcesStorage _storage;
         
+        public event Action AfterAction = delegate {  };
+        
         private void Awake()
         {
             actionsContainer?.Clear();
         }
 
-        public void AcceptCard(CardFactory factory, CardInfo cardInfo, IResourcesStorage storage)
+        private void AcceptStorage(IResourcesStorage storage)
         {
-            _storage = storage;
+            if (_storage == null)
+            {
+                _storage = storage;
+                _resourceStorageController.Accept(storage);
+            }
+        }
+
+        public void AcceptCard(CardVisualFactory visualFactory, CardInfo cardInfo, IResourcesStorage storage)
+        {
+            // Создает визуальное отображение ресурсов, если до этого оно ни разу не создавалось.
+            AcceptStorage(storage);
             
-            _currentCardVisual = factory.CreateCardVisual(cardRoot, cardInfo);
+            _currentCardVisual = visualFactory.CreateCardVisual(cardRoot, cardInfo);
             _currentCardVisual.OnShowActions += Activate;
             _currentCardVisual.OnHideActions += Deactivate;
             
@@ -56,12 +68,14 @@ namespace Game.Ui
             var mono = _currentCardVisual as MonoBehaviour;
             if (mono != null)
             {
-                DestroyImmediate(mono);
+                DestroyImmediate(mono.gameObject);
             }
 
             _currentCardVisual = null;
             
+            // Очищаем контейнер и скрываем его и ресурсы.
             actionsContainer.Clear();
+            Deactivate();
         }
 
         private void CreateActions(CardInfo cardInfo, IResourcesStorage storage)
@@ -79,9 +93,22 @@ namespace Game.Ui
             cardActionVisual.OnClicked += ProcessCardAction;
         }
 
+        // Обработка операции карточки.
         private void ProcessCardAction(CardAction cardAction)
         {
+            LockActions();
+            
             cardAction.Invoke(_storage);
+            AfterAction();
+        }
+
+        // Блокирование всех действий. Пользователь не должен иметь возможности их активировать снова.
+        private void LockActions()
+        {
+            foreach (var actionVisual in actionsContainer.GetEnumerable<ICardActionVisual>())
+            {
+                actionVisual.Lock();
+            }
         }
 
         private void Activate()

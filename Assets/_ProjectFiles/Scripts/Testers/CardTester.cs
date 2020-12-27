@@ -25,7 +25,7 @@ namespace Game
         {
             _storage.InitResourcesByInfo(CardAction.UniqueResourceInfos(cardInfo.CardActions));
             
-            cardRootController.AcceptCard(CardFactory.Instance, cardInfo, _storage);
+            cardRootController.AcceptCard(CardVisualFactory.Instance, cardInfo, _storage);
             resourceStorageController.Accept(_storage);
         }
     }

@@ -14,6 +14,11 @@ namespace Game.Ui
         event Action<CardAction> OnClicked;
         
         void Accept(CardAction cardAction, IResourcesStorage storage);
+
+        /// <summary>
+        /// Не позволяет совершать действия.
+        /// </summary>
+        void Lock();
     }
     
     public class CardActionVisual : SerializedVisual<ICardActionVisual>, ICardActionVisual
@@ -55,6 +60,15 @@ namespace Game.Ui
                     .Put<IResourceOperationEffectVisual>(resourceOperationEffectVisualPrefab);
                 visual.Accept(resourceOperationBinding.resourceInfo, resourceOperationBinding.Operation);
             }
+        }
+
+        /// <summary>
+        /// Не позволяет совершать действия.
+        /// </summary>
+        public void Lock()
+        {
+            var button = GetComponent<Button>();
+            button.interactable = false;
         }
     }
 }

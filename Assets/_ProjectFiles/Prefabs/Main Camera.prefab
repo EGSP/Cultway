@@ -88,3 +88,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   widthFit: 6
+  heightFit: 10
+  fitMode: 1

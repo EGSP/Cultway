@@ -9,9 +9,8 @@ using UnityEngine.Assertions.Must;
 
 namespace Game.Cards
 {
-    public class CardFactory : SerializedSingleton<CardFactory>
+    public class CardVisualFactory : SerializedSingleton<CardVisualFactory>
     {
-        [SerializeField] public Transform cardVisualParent;
         [OdinSerialize] public ICardVisual CardVisualPrefab;
 
         private void Awake()

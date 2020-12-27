@@ -677,72 +677,18 @@ MonoBehaviour:
   townManager: {fileID: 1625745969}
   map: {fileID: 1811149247}
   travelTime: 0.4
---- !u!1 &1625745967
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1625745968}
-  - component: {fileID: 1625745969}
-  m_Layer: 0
-  m_Name: TownManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1625745968
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1625745967}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1625745969
+--- !u!114 &1625745969 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 6726401847800054661, guid: e14e6f69c0a1315458e1c1a032f0525c,
+    type: 3}
+  m_PrefabInstance: {fileID: 6726401848330267060}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1625745967}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ab5af16a13e4fb0b05100c8e058c29b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 438436569502799828, guid: 8047254b18944e44bbb2b476df40cb8f, type: 3}
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: AutoSpawn
-      Entry: 5
-      Data: true
-    - Name: AutoDestroy
-      Entry: 5
-      Data: true
-    - Name: townPrefab
-      Entry: 10
-      Data: 0
-  minimumDistance: 4
-  mainPosition: {x: 0, y: -3.5, z: 0}
-  townCount: 4
-  visitedTownsCount: 2
 --- !u!1 &1811149246
 GameObject:
   m_ObjectHideFlags: 0
@@ -952,3 +898,78 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8047254b18944e44bbb2b476df40cb8f, type: 3}
+--- !u!1001 &6726401848330267060
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6726401847800054660, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6726401847800054660, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6726401847800054660, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6726401847800054660, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6726401847800054660, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6726401847800054660, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6726401847800054660, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6726401847800054660, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6726401847800054660, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6726401847800054660, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6726401847800054660, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6726401847800054661, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 6726401847800054661, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+    - target: {fileID: 6726401847800054683, guid: e14e6f69c0a1315458e1c1a032f0525c,
+        type: 3}
+      propertyPath: m_Name
+      value: TownManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e14e6f69c0a1315458e1c1a032f0525c, type: 3}
