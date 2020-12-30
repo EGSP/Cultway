@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using DG.Tweening;
+using Egsp.RandomTools;
 using Game.Resources;
 using Game.Ui;
 using Sirenix.OdinInspector;
@@ -28,6 +29,27 @@ namespace Game.Cards
                 throw new NullReferenceException();
 
             cardRootController.AfterAction += ListenCardAction;
+        }
+
+        private void TestWeightedList(ICardSet cardSet)
+        {
+            var weightedList = WeightedList<CardInfo>.FromList(cardSet);
+            weightedList.Step = 10f;
+            weightedList.SetBalancer(new ThrowOverBalancer<CardInfo>(weightedList));
+
+            for (int i = 0; i < 100; i++)
+            {
+                Debug.Log(weightedList.Pick().Value.Name);
+            }
+            
+            Debug.Log("-------------------------------------------------");
+
+            for (int i = 0; i < weightedList.Count; i++)
+            {
+                Debug.Log(weightedList[i].ToString());
+            }
+            
+            Debug.Log(weightedList.WeightBalancer.Name);
         }
 
         private void ListenCardAction()

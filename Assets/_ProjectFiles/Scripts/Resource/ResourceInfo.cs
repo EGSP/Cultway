@@ -7,7 +7,7 @@ namespace Game.Resources
     [InlineEditor()]
     public class ResourceInfo : SerializedScriptableObject
     {
-        [OdinSerialize]
+        [OdinSerialize] [PreviewField]
         public Sprite Sprite { get; private set; }
 
         [OdinSerialize]

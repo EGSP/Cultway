@@ -9,7 +9,7 @@ namespace Game.Cards
     [InlineEditor()]
     public class CardInfo : SerializedScriptableObject
     {
-        [OdinSerialize]
+        [OdinSerialize][PreviewField]
         public Sprite Sprite { get; private set; }
         
         [OdinSerialize]
@@ -23,5 +23,10 @@ namespace Game.Cards
         /// </summary>
         [OdinSerialize][TableList(AlwaysExpanded = true)]
         public List<CardAction> CardActions { get; private set; }
+
+        public override string ToString()
+        {
+            return Name == null ? "nullName" : Name;
+        }
     }
 }
