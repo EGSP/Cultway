@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Game.World
 {
-    public class TownManager : SerializedMonoBehaviour, IMapListener
+    public class TownManager : SerializedMonoBehaviour, IMapListener, ITownProvider
     {
         [BoxGroup("Map")][Tooltip("Минимальное расстояние между городами.")]
         [SerializeField] private float minimumDistance;
@@ -36,6 +36,9 @@ namespace Game.World
         
         // Направление спавна городов.
         private Vector3 SpawnDirection => Vector3.up;
+
+        public ICollection<ITown> Towns => _townList;
+        
 
         /// <summary>
         /// Спавн города. Город заносится в список.
