@@ -80,25 +80,32 @@ namespace Game.Ui
 
         private void CreateActions(CardInfo cardInfo, IResourcesStorage storage)
         {
-            foreach (var cardAction in cardInfo.CardActions)
+            var actions = cardInfo.GetActions();
+            if (actions == null)
+                return;
+            
+            foreach (var cardAction in actions)
             {
-                var inst = actionsContainer.Put<ICardActionVisual>(actionPrefab);
+                var inst = actionsContainer.Put(actionPrefab);
                 inst.Accept(cardAction,storage);
-                ListenCardAction(inst);
+                ListenCardAction(inst, cardInfo);
             }
         }
 
-        private void ListenCardAction(ICardActionVisual cardActionVisual)
+        // Ожидание нажатия на операцию.
+        private void ListenCardAction(ICardActionVisual cardActionVisual, CardInfo owner)
         {
-            cardActionVisual.OnClicked += ProcessCardAction;
+            cardActionVisual.OnClicked += (a)=>ProcessCardAction(a,owner);
         }
 
         // Обработка операции карточки.
-        private void ProcessCardAction(CardAction cardAction)
+        private void ProcessCardAction(ICardAction cardAction, CardInfo owner)
         {
             LockActions();
             
             cardAction.Invoke(_storage);
+            owner.RuntimeBehaviour = cardAction.NewCardBehaviour;
+            
             AfterAction();
         }
 

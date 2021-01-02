@@ -1,5 +1,6 @@
-﻿using System.Collections;
+﻿
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine;
 namespace Game.Cards
 {
     [InlineEditor()]
-    public class CardInfo : SerializedScriptableObject
+    public class CardInfo : SerializedScriptableObject, ICardBehaviour
     {
         [OdinSerialize][PreviewField]
         public Sprite Sprite { get; private set; }
@@ -21,12 +22,64 @@ namespace Game.Cards
         /// <summary>
         /// Действия которые может совершить карта.
         /// </summary>
-        [OdinSerialize][TableList(AlwaysExpanded = true)]
-        public List<CardAction> CardActions { get; private set; }
-
+        [OdinSerialize][TableList(AlwaysExpanded = true)][CanBeNull]
+        public List<ICardAction> CardActions { get; private set; }
+        
+        
         public override string ToString()
         {
             return Name == null ? "nullName" : Name;
+        }
+        
+        
+        // Runtime ---------
+        /// <summary>
+        /// Текущее поведение карточки.
+        /// </summary>
+        [NotNull]
+        public ICardBehaviour RuntimeBehaviour
+        {
+            get
+            {
+                // Если нет поведения, то используем базовое.
+                if (_runtimeBehaviour == null)
+                    _runtimeBehaviour = this;
+
+                return _runtimeBehaviour;
+            }
+            set
+            {
+                // Если у переданного состояния не будет продолжения, то остается текущее состояние.
+                if (_runtimeBehaviour != null)
+                    _runtimeBehaviour = value;
+            }
+        }
+
+        [CanBeNull]
+        private ICardBehaviour _runtimeBehaviour;
+
+        public IEnumerable<ICardAction> GetActions()
+        {
+            if (IsRuntimeBehaviour())
+                return CardActions;
+
+            return RuntimeBehaviour.GetActions();
+        }
+
+        public string GetDescription()
+        {
+            if(IsRuntimeBehaviour())
+                return Description ?? "Null description";
+            
+            return RuntimeBehaviour.GetDescription();
+        }
+
+        private bool IsRuntimeBehaviour()
+        {
+            if (ReferenceEquals(this, RuntimeBehaviour))
+                return true;
+
+            return false;
         }
     }
 }

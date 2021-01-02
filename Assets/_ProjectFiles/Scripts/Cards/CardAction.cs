@@ -1,87 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.Resources;
+using JetBrains.Annotations;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace Game.Cards
 {
-    [System.Serializable]
-    public class CardAction
+    public interface ICardAction
     {
-        /// <summary>
-        /// Группа операций данной карты.
-        /// </summary>
-        public class CardOperationGroup
-        {
-            public CardOperationGroup()
-            {
-                ResourceOperationBindings = new List<ResourceOperationBinding>();
-            }
-            
-            public List<ResourceOperationBinding> ResourceOperationBindings;
+        ICardBehaviour NewCardBehaviour { get; }
 
-            public void InvokeOperationsAll(IResourcesStorage storage)
-            {
-                foreach (var resourceOperation in ResourceOperationBindings)
-                {
-                    resourceOperation.InvokeOperation(storage);
-                }
-            }
-
-            /// <summary>
-            /// Получение всех видов ресурсов из операций.
-            /// </summary>
-            public List<ResourceInfo> ResourceInfos()
-            {
-                if(ResourceOperationBindings == null)
-                    throw new NullReferenceException();
-                
-                var list = new List<ResourceInfo>();
-
-                foreach (var resourceOperationBinding in ResourceOperationBindings)
-                {
-                    if (!list.Contains(resourceOperationBinding.resourceInfo))
-                    {
-                        list.Add(resourceOperationBinding.resourceInfo);
-                    }
-                }
-
-                return list;
-            }
-        }
-
-        /// <summary>
-        /// Класс связывает информацию о ресурсе и операцию над ресурсом.
-        /// </summary>
-        public class ResourceOperationBinding
-        {
-            /// <summary>
-            /// Ресурс с которым данная операция работает.
-            /// </summary>
-            public ResourceInfo resourceInfo;
+        [OdinSerialize]
+        CardOperationGroup OperationGroup { get; }
         
-            /// <summary>
-            /// Операция совершаемая этим действием.
-            /// </summary>
-            public IResourceOperation Operation;
+        string GetDecription();
+        
+        bool Precodnition(IResourcesStorage storage);
 
-            public void InvokeOperation(IResourcesStorage storage)
-            {
-                var resource = storage.GetResource(resourceInfo);
-                
-                if(resource == null)
-                    throw new NullReferenceException();
-                
-                Operation.Invoke(resource);
-            }
-        }
+        /// <summary>
+        /// Совершение операции.
+        /// </summary>
+        void Invoke(IResourcesStorage storage);
+    }
+
+    [Serializable]
+    public class CardAction : ICardAction
+    {
+        [OdinSerialize][PropertyOrder(3)][CanBeNull]
+        public ICardBehaviour NewCardBehaviour { get; private set; }
 
         /// <summary>
         /// Группа операций с разными ресурсами для текущего действия.
         /// </summary>
-        public CardOperationGroup OperationGroup;
+        [OdinSerialize][PropertyOrder(1)][CanBeNull]
+        public CardOperationGroup OperationGroup { get; private set; }
 
-        [TextArea]
+        [TextArea][PropertyOrder(2)]
         public string description;
 
         public string GetDecription()
@@ -91,16 +47,16 @@ namespace Game.Cards
 
         public bool Precodnition(IResourcesStorage storage)
         {
-            if (OperationGroup == null || OperationGroup.ResourceOperationBindings == null)
+            if (OperationGroup == null || OperationGroup.resourceOperationBindings == null)
             {
                 Debug.LogWarning("В карте не определены операции!");
                 return false;   
             }
 
             // Проходимся по всем операциям.
-            for (var i = 0; i < OperationGroup.ResourceOperationBindings.Count; i++)
+            for (var i = 0; i < OperationGroup.resourceOperationBindings.Count; i++)
             {
-                var operationBinding = OperationGroup.ResourceOperationBindings[i];
+                var operationBinding = OperationGroup.resourceOperationBindings[i];
                 var resource = storage.GetResource(operationBinding.resourceInfo);
 
                 // Если не существует данного ресурса.
@@ -123,15 +79,28 @@ namespace Game.Cards
         /// </summary>
         public void Invoke(IResourcesStorage storage)
         {
-            OperationGroup.InvokeOperationsAll(storage);
+            if (OperationGroup != null)
+            {
+                OperationGroup.InvokeOperationsAll(storage);
+            }
+            else
+            {
+                Debug.LogWarning("Invoked action with null operation group!");
+            }
         }
 
-        public static List<ResourceInfo> UniqueResourceInfos(IEnumerable<CardAction> cardActions)
+        /// <summary>
+        /// Извлекает из действий уникальный список ресурсов.
+        /// </summary>
+        public static List<ResourceInfo> UniqueResourceInfos(IEnumerable<ICardAction> cardActions)
         {
             var list = new List<ResourceInfo>();
             // Проходимся по всем действиям и добавляем уникальные ресурсы.
             foreach (var cardAction in cardActions)
             {
+                if(cardAction.OperationGroup == null)
+                    continue;
+                
                 var cardList = cardAction.OperationGroup.ResourceInfos();
                 for (var i = 0; i < cardList.Count; i++)
                 {

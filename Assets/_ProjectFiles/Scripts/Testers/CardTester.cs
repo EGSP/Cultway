@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Egsp.Core;
+﻿using Egsp.Core;
 using Game.Cards;
-using Game.Player;
 using Game.Resources;
-using Game.Services;
 using Game.Ui;
-using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 
@@ -23,7 +17,7 @@ namespace Game
 
         protected void Start()
         {
-            _storage.InitResourcesByInfo(CardAction.UniqueResourceInfos(cardInfo.CardActions));
+            _storage.InitResourcesByInfo(CardAction.UniqueResourceInfos(cardInfo.GetActions()));
             
             cardRootController.AcceptCard(CardVisualFactory.Instance, cardInfo, _storage);
             resourceStorageController.Accept(_storage);

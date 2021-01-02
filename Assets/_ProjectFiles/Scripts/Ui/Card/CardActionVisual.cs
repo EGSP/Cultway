@@ -11,9 +11,9 @@ namespace Game.Ui
 {
     public interface ICardActionVisual : IVisual<ICardActionVisual>
     {
-        event Action<CardAction> OnClicked;
+        event Action<ICardAction> OnClicked;
         
-        void Accept(CardAction cardAction, IResourcesStorage storage);
+        void Accept(ICardAction cardAction, IResourcesStorage storage);
 
         /// <summary>
         /// Не позволяет совершать действия.
@@ -28,13 +28,13 @@ namespace Game.Ui
         [SerializeField] private IResourceOperationEffectVisual resourceOperationEffectVisualPrefab;
         [SerializeField] private TransformContainer resourcesIconsContainer;
         
-        private CardAction _action;
+        private ICardAction _action;
         private IResourcesStorage _storage;
 
-        public event Action<CardAction> OnClicked = delegate(CardAction action) {  };
+        public event Action<ICardAction> OnClicked = delegate(ICardAction action) {  };
 
         [Button("Accept CardAction")]
-        public void Accept(CardAction cardAction, IResourcesStorage storage)
+        public void Accept(ICardAction cardAction, IResourcesStorage storage)
         {
             _action = cardAction;
             _storage = storage;
@@ -54,10 +54,9 @@ namespace Game.Ui
             }
 
             // ICONS
-            foreach (var resourceOperationBinding in _action.OperationGroup.ResourceOperationBindings)
+            foreach (var resourceOperationBinding in _action.OperationGroup.resourceOperationBindings)
             {
-                var visual = resourcesIconsContainer
-                    .Put<IResourceOperationEffectVisual>(resourceOperationEffectVisualPrefab);
+                var visual = resourcesIconsContainer.Put(resourceOperationEffectVisualPrefab);
                 visual.Accept(resourceOperationBinding.resourceInfo, resourceOperationBinding.Operation);
             }
         }
