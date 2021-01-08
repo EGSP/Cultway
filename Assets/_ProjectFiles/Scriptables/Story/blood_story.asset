@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ddce44a5f284445b96ebc15d512817d, type: 3}
+  m_Name: blood_story
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 21300000, guid: 52eaeda29ca558f41a67136f4c7831e7, type: 3}
+    - {fileID: 11400000, guid: 124309ec6b747614b875ca4d5fcbf651, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: Sprite
+      Entry: 10
+      Data: 0
+    - Name: Description
+      Entry: 1
+      Data: Blood god story.
+    - Name: CardSet
+      Entry: 10
+      Data: 1
