@@ -41,7 +41,8 @@ namespace Game.Scenes
             SceneManager.sceneUnloaded += OnSceneUnloaded;
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
             
-            HandleRootScene();
+            // Данный вызов не требуется, т.к. при подписке на событие обрабатывается новая сцена.
+            // HandleRootScene();
         }
 
         public bool SetActiveScene(string sceneName)
@@ -61,22 +62,21 @@ namespace Game.Scenes
         }
         
 
-        public void LoadSceneAdditive(string sceneName)
+        public void LoadSceneAdditive(string sceneName, bool autoSetActiveScene)
         {
             if (Application.CanStreamedLevelBeLoaded(sceneName) == false)
                 return;
 
-            _sceneRoutine = LoadSceneRoutine(sceneName);
+            _sceneRoutine = LoadSceneRoutine(sceneName, autoSetActiveScene);
             Coroutiner.StartRoutine(_sceneRoutine);
         }
 
         /// <summary>
         /// Асинхронная загрузка сцены.
         /// </summary>
-        private IEnumerator LoadSceneRoutine(string sceneName)
+        private IEnumerator LoadSceneRoutine(string sceneName, bool autoSetActiveScene)
         {
             var loadOperation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-            loadOperation.allowSceneActivation = false;
 
             while (!loadOperation.isDone)
             {
@@ -89,9 +89,10 @@ namespace Game.Scenes
             // Меняем активную сцену и вызываем событие смены оператора.
             if (LastLoadedScene != null)
             {
-                SceneManager.SetActiveScene(LastLoadedScene.Item1);
-                SceneEvents.Raise<ISceneOperator>(o =>
-                    o.ActiveSceneChanged(LastLoadedScene.Item1));
+                if (autoSetActiveScene)
+                {
+                    SceneManager.SetActiveScene(LastLoadedScene.Item1);
+                }
             }
         }
 
@@ -110,6 +111,7 @@ namespace Game.Scenes
             }
             
             LoadedScenes.Add(new Tuple<Scene, LoadSceneMode>(scene, mode));
+            SceneEvents.Raise<ISceneOperator>(x=>x.AfterSceneLoaded(scene));
         }
         
         
@@ -145,9 +147,18 @@ namespace Game.Scenes
         /// </summary>
         private void HandleRootScene()
         {
+            Coroutiner.StartRoutine(HandleRootSceneRoutine());
+        }
+
+        private IEnumerator HandleRootSceneRoutine()
+        {
+            // Ждем прогрузку объектов сцены.
+            yield return new WaitForEndOfFrame();
+            
             var scene = SceneManager.GetActiveScene();
             OnSceneLoaded(scene, LoadSceneMode.Single);
         }
+        
 
         public override void Dispose()
         {
