@@ -30,6 +30,7 @@ namespace Game.Ui.Stories
             
             _toogleState = !_toogleState;
             _storyInfoVisual.ToogleDescription(_toogleState);
+            _storyInfoVisual.Click();
         }
     }
 }

@@ -19,20 +19,46 @@ namespace Game.Ui.MainMenu
     {
         [SerializeField] private TransformContainer container;
         [SerializeField] private IStoryInfoVisual _storyInfoPrefab;
+        [SerializeField] private Button startNewGameButton;
+
+        [CanBeNull] private IStoryInfo _selectedStory;
 
         protected override void Awake()
         {
             base.Awake();
+            CanGameBeStarted();
         }
 
+        private void CanGameBeStarted()
+        {
+            if (_selectedStory == null)
+            {
+                startNewGameButton.interactable = false;
+            }
+            else
+            {
+                startNewGameButton.interactable = true;
+            }
+        }
+        
         public void Back()
         {
+            _selectedStory = null;
+            CanGameBeStarted();
+            
             ContextBus?.Raise<IMainMenu>(x=>{
                 Disable();
-                x.BackToMenu();
+                x.ShowMenu();
             });
         }
-    
+
+        public void StartNewGame()
+        {
+            if(_selectedStory == null)
+                Debug.LogWarning("Попытка начать игру без выбранной истории.");
+            
+            ContextBus?.Raise<IMainMenu>(x=>x.StartNewGame(_selectedStory));
+        }
 
         public void PreviewStories(IEnumerable<IStoryInfo> stories)
         {
@@ -48,7 +74,19 @@ namespace Game.Ui.MainMenu
             {
                 var inst = container.Put(_storyInfoPrefab);
                 inst.Accept(info);
+                ListenStory(inst);
             }
+        }
+
+        private void ListenStory( IStoryInfoVisual storyInfoVisual)
+        {
+            storyInfoVisual.OnClick += OnStoryClicked;
+        }
+
+        private void OnStoryClicked(IStoryInfoVisual storyInfoVisual)
+        {
+            _selectedStory = storyInfoVisual.StoryInfo;
+            CanGameBeStarted();
         }
     }
 }

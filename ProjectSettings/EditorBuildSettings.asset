@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/_ProjectFiles/Scenes/Assembly/gameplay_assembly.unity
     guid: db46205cc8f0e0f44af57e0c24ce9c01
   - enabled: 1
+    path: Assets/_ProjectFiles/Scenes/Assembly/mainmenu_assembly.unity
+    guid: 4009ce396c7c8a44f9cd9410084e60ff
+  - enabled: 1
     path: Assets/_ProjectFiles/Scenes/Test/SceneTests/subloadscene.unity
     guid: 7053d001fed7dce4194d7b6b562d4e02
   m_configObjects: {}

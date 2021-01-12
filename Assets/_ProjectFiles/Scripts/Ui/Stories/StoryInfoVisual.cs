@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using Egsp.Core.Ui;
 using Game.Stories;
 using JetBrains.Annotations;
@@ -11,6 +12,11 @@ namespace Game.Ui.Stories
 {
     public interface IStoryInfoVisual : IVisual<IStoryInfoVisual>
     {
+        [CanBeNull] IStoryInfo StoryInfo { get; }
+        event Action<IStoryInfoVisual> OnClick;
+
+        void Click();
+        
         void Accept([CanBeNull]IStoryInfo storyInfo);
 
         void ToogleDescription(bool toogleOn);
@@ -24,12 +30,17 @@ namespace Game.Ui.Stories
         [SerializeField] private Vector2 defaultDescriptionPosition;
         [SerializeField] private Vector2 activeDescriptionPosition;
         [SerializeField] private float animDuration;
+        
+        public IStoryInfo StoryInfo { get; private set; }
+        public event Action<IStoryInfoVisual> OnClick = delegate(IStoryInfoVisual visual) {  };
 
         public void Accept(IStoryInfo storyInfo)
         {
             if (storyInfo == null)
                 return;
 
+            StoryInfo = storyInfo;
+            
             if (storyInfo.Sprite != null)
                 storyIcon.sprite = storyInfo.Sprite;
 
@@ -64,6 +75,11 @@ namespace Game.Ui.Stories
                         storyDescription.gameObject.SetActive(false);
                     });
             }
+        }
+
+        public void Click()
+        {
+            OnClick(this);
         }
     }
 }

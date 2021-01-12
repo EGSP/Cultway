@@ -7,11 +7,11 @@ namespace Game.Scenes
     {
         Scene ParentScene { get; }
 
-        void AfterSceneLoaded(Scene loadedScene);
+        void AfterSceneLoaded(Scene loadedScene, SceneParams @params);
         
-        void ActiveSceneChanged(Scene newActiveScene);
+        void ActiveSceneChanged(Scene newActiveScene, SceneParams @params);
 
-        void BeforeSceneUnload(Scene scene);
+        void BeforeSceneUnload(Scene scene, SceneParams @params);
     }
 
     public static class SceneOperatorExtensions

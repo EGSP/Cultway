@@ -39,7 +39,7 @@ namespace Game.Ui.MainMenu
 
         public void NewGame()
         {
-            ContextBus?.Raise<IMainMenu>(x=>x.StartNewGame());
+            ContextBus?.Raise<IMainMenu>(x=>x.SetupNewGame());
         }
 
         public void Settings()

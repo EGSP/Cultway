@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Egsp.Core;
+using Game.Scenes;
 using Game.Stories;
 using Game.Ui.MainMenu;
 using Sirenix.OdinInspector;
@@ -12,9 +13,10 @@ namespace Game
 {
     public interface IMainMenu
     {
-        void BackToMenu();
+        void ShowMenu();
         void ContinueGame();
-        void StartNewGame();
+        void SetupNewGame();
+        void StartNewGame(IStoryInfo storyInfo);
         void OpenSettings();
         void Exit();
     }
@@ -23,6 +25,7 @@ namespace Game
     {
         [OdinSerialize] private List<IStoryInfo> _storyInfos;
         [OdinSerialize] private IEventContext _eventContext;
+        [SerializeField] private string gameplayScene;
         
         private EventBus _eventBus;
         
@@ -48,28 +51,49 @@ namespace Game
             }
         }
 
-        public void BackToMenu()
-        {
-            _eventBus.Raise<IMenuActionsController>(x=>
-                x.Enable());
-        }
-
         public void ContinueGame()
         {
             throw new NotImplementedException();            
         }
 
-        public void StartNewGame()
+        public void SetupNewGame()
         {
-            Debug.Log("Start new game.");
             _eventBus.Raise<IMenuActionsController>(x => 
                 x.Disable());
             _eventBus.Raise<IStoryActionsController>(x =>
             {
-                Debug.Log("story actions");
                 x.Enable();
                 x.PreviewStories(_storyInfos);
             });
+        }
+
+        public void StartNewGame(IStoryInfo storyInfo)
+        {
+            if (string.IsNullOrWhiteSpace(gameplayScene))
+            {
+                Debug.LogWarning("Incorrect scene name in start new game!");
+                return;
+            }
+            
+            var @params = new GameStartParams(storyInfo);
+
+            GameSceneManager.Instance.LoadSceneAdditive(gameplayScene, true, @params);
+            HideMenu();
+        }
+
+        public void ShowMenu()
+        {
+            _eventBus.Raise<IMenuActionsController>(x=>
+                x.Enable());
+        }
+        
+        public void HideMenu()
+        {
+            _eventBus.Raise<IMenuActionsController>(x=>
+                x.Disable());
+
+            _eventBus.Raise<IStoryActionsController>(x =>
+                x.Disable());
         }
 
         public void OpenSettings()

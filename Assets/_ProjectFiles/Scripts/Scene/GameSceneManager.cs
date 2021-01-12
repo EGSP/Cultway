@@ -13,6 +13,8 @@ namespace Game.Scenes
     public class GameSceneManager : SingletonRaw<GameSceneManager>
     {
         private IEnumerator _sceneRoutine;
+
+        [NotNull] private Dictionary<string, SceneParams> _sceneParamsCache; 
         
         [NotNull]
         public EventBus SceneEvents { get; private set; }
@@ -34,6 +36,7 @@ namespace Game.Scenes
 
         public GameSceneManager() : base()
         {
+            _sceneParamsCache = new Dictionary<string, SceneParams>();
             SceneEvents = new EventBus();
             LoadedScenes = new List<Tuple<Scene, LoadSceneMode>>();
 
@@ -61,12 +64,29 @@ namespace Game.Scenes
             return false;
         }
         
-
+        /// <summary>
+        /// Запускает загрузку сцены. 
+        /// </summary>
         public void LoadSceneAdditive(string sceneName, bool autoSetActiveScene)
         {
             if (Application.CanStreamedLevelBeLoaded(sceneName) == false)
                 return;
 
+            _sceneRoutine = LoadSceneRoutine(sceneName, autoSetActiveScene);
+            Coroutiner.StartRoutine(_sceneRoutine);
+        }
+
+        /// <summary>
+        /// Запускает загрузку сцены с параметром.
+        /// </summary>
+        public void LoadSceneAdditive(string sceneName, bool autoSetActiveScene, SceneParams @params)
+        {
+            if (Application.CanStreamedLevelBeLoaded(sceneName) == false)
+                return;
+            
+            // Кэшируем параметры.
+            CacheParams(sceneName,@params);
+            
             _sceneRoutine = LoadSceneRoutine(sceneName, autoSetActiveScene);
             Coroutiner.StartRoutine(_sceneRoutine);
         }
@@ -96,6 +116,17 @@ namespace Game.Scenes
             }
         }
 
+        public void UnloadScene(string sceneName)
+        {
+            var scene = SceneManager.GetSceneByName(sceneName);
+            
+            // Оповещаем всех операторов перед выгрузкой сцены.
+            SceneEvents.Raise<ISceneOperator>(o=>
+                o.BeforeSceneUnload(scene, GetParamsFromCache(sceneName, removeParams: true)));
+            
+            SceneManager.UnloadSceneAsync(scene.name);
+        }
+        
         /// <summary>
         /// Заносим новую сцену в список открытых.
         /// </summary>
@@ -111,16 +142,8 @@ namespace Game.Scenes
             }
             
             LoadedScenes.Add(new Tuple<Scene, LoadSceneMode>(scene, mode));
-            SceneEvents.Raise<ISceneOperator>(x=>x.AfterSceneLoaded(scene));
-        }
-        
-        
-        public void UnloadScene(string sceneName)
-        {
-            var scene = SceneManager.GetSceneByName(sceneName);
-            // Оповещаем всех операторов перед выгрузкой сцены.
-            SceneEvents.Raise<ISceneOperator>(o=>o.BeforeSceneUnload(scene));
-            SceneManager.UnloadSceneAsync(scene.name);
+            SceneEvents.Raise<ISceneOperator>(x=>
+                x.AfterSceneLoaded(scene, GetParamsFromCache(scene.name)));
         }
 
         /// <summary>
@@ -139,7 +162,8 @@ namespace Game.Scenes
 
         private void OnActiveSceneChanged(Scene oldScene, Scene newScene)
         {
-            SceneEvents.Raise<ISceneOperator>(o=>o.ActiveSceneChanged(newScene));
+            SceneEvents.Raise<ISceneOperator>(o=>
+                o.ActiveSceneChanged(newScene, GetParamsFromCache(newScene.name)));
         }
 
         /// <summary>
@@ -157,6 +181,35 @@ namespace Game.Scenes
             
             var scene = SceneManager.GetActiveScene();
             OnSceneLoaded(scene, LoadSceneMode.Single);
+        }
+
+        private void CacheParams(string sceneName, [CanBeNull] SceneParams @params)
+        {
+            if(@params == null)
+                @params = new EmptyParams();
+            
+            if (_sceneParamsCache.ContainsKey(sceneName))
+            {
+                _sceneParamsCache[sceneName] = @params;
+            }
+            else
+            {
+                _sceneParamsCache.Add(sceneName, @params);
+            }
+        }
+
+        [NotNull]
+        private SceneParams GetParamsFromCache(string sceneName, bool removeParams = false)
+        {
+            if(!_sceneParamsCache.ContainsKey(sceneName))
+                return new EmptyParams();
+
+            var @params = _sceneParamsCache[sceneName];
+
+            if (removeParams)
+                _sceneParamsCache.Remove(sceneName);
+            
+            return @params;
         }
         
 
