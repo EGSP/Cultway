@@ -77,7 +77,8 @@ namespace Game
             
             var @params = new GameStartParams(storyInfo);
 
-            GameSceneManager.Instance.LoadSceneAdditive(gameplayScene, true, @params);
+            GameSceneManager.Instance.LoadSceneAdditive(gameplayScene, true,
+                null,@params);
             HideMenu();
         }
 

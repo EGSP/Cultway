@@ -45,7 +45,7 @@ namespace Game.Scenes
 
         private void Awake()
         {
-            GameSceneManager.Instance.SceneEvents.Subscribe<ISceneOperator>(this);
+            GameSceneManager.Instance.Bus.Subscribe<ISceneOperator>(this);
         }
 
         public Scene ParentScene => gameObject.scene;
