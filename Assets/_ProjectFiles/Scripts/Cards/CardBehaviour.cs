@@ -10,6 +10,12 @@ namespace Game.Cards
         [CanBeNull]
         IEnumerable<ICardAction> GetActions();
 
+        /// <summary>
+        /// Получение поведений, которые можно получить из действий.
+        /// </summary>
+        [CanBeNull]
+        List<ICardBehaviour> GetNextBehaviours();
+
         [NotNull]
         string GetDescription();
     }
@@ -28,6 +34,22 @@ namespace Game.Cards
         public IEnumerable<ICardAction> GetActions()
         {
             return CardActions;
+        }
+
+        public List<ICardBehaviour> GetNextBehaviours()
+        {
+            if (CardActions == null)
+                return new List<ICardBehaviour>();
+            
+            var list = new List<ICardBehaviour>();
+            for (var i = 0; i < CardActions.Count; i++)
+            {
+                if (CardActions[i].NewCardBehaviour != null)
+                {
+                    list.Add(CardActions[i].NewCardBehaviour);
+                }
+            }
+            return list;
         }
 
         public string GetDescription()

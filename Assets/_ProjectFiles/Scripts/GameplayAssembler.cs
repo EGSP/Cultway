@@ -55,7 +55,7 @@ namespace Game
             }
             else
             {
-                Debug.LogWarning("Scene loaded without GameStartParams!");
+                 Debug.LogWarning("Scene loaded without GameStartParams!");
             }
         }
 

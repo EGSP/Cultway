@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f92571d4c2ab4b5c8b3b1f8366a0167a, type: 3}
-  m_Name: diamon_resource
+  m_Name: bloodcoin_resource
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 243092317917654040, guid: 8fd3be41cb4060f4ebcde203667e1566, type: 3}
+    - {fileID: -6044890018222111754, guid: 8fd3be41cb4060f4ebcde203667e1566, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -27,4 +27,4 @@ MonoBehaviour:
       Data: 0
     - Name: Name
       Entry: 1
-      Data: Diamond
+      Data: bloodcoin

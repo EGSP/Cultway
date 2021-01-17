@@ -24,8 +24,7 @@ namespace Game.Cards
         /// </summary>
         [OdinSerialize][TableList(AlwaysExpanded = true)][CanBeNull]
         public List<ICardAction> CardActions { get; private set; }
-        
-        
+
         public override string ToString()
         {
             return Name == null ? "nullName" : Name;
@@ -34,7 +33,7 @@ namespace Game.Cards
         
         // Runtime ---------
         /// <summary>
-        /// Текущее поведение карточки.
+        /// Текущее поведение карточки. По умолчанию ссылается на CardInfo as ICardBehaviour.
         /// </summary>
         [NotNull]
         public ICardBehaviour RuntimeBehaviour
@@ -64,6 +63,22 @@ namespace Game.Cards
                 return CardActions;
 
             return RuntimeBehaviour.GetActions();
+        }
+        
+        public List<ICardBehaviour> GetNextBehaviours()
+        {
+            if (CardActions == null)
+                return new List<ICardBehaviour>();
+            
+            var list = new List<ICardBehaviour>();
+            for (var i = 0; i < CardActions.Count; i++)
+            {
+                if (CardActions[i].NewCardBehaviour != null)
+                {
+                    list.Add(CardActions[i].NewCardBehaviour);
+                }
+            }
+            return list;
         }
 
         public string GetDescription()

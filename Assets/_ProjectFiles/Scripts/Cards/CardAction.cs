@@ -10,6 +10,7 @@ namespace Game.Cards
 {
     public interface ICardAction
     {
+        [CanBeNull]
         ICardBehaviour NewCardBehaviour { get; }
 
         [OdinSerialize]
@@ -28,7 +29,7 @@ namespace Game.Cards
     [Serializable]
     public class CardAction : ICardAction
     {
-        [OdinSerialize][PropertyOrder(3)][CanBeNull]
+        [OdinSerialize][PropertyOrder(3)]
         public ICardBehaviour NewCardBehaviour { get; private set; }
 
         /// <summary>
